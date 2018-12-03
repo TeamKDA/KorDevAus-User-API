@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Kda.User.FunctionApp.Handlers
 {
     /// <summary>
-    /// This provides interfaces to the <see cref="GraphServiceHandler"/> class.
+    /// This provides interfaces to the graph service handler class.
     /// </summary>
     public interface IGraphServiceHandler : IDisposable
     {
@@ -34,9 +34,10 @@ namespace Kda.User.FunctionApp.Handlers
         IGraphServiceHandler Build();
 
         /// <summary>
-        /// Gets the list of <see cref="Microsoft.Graph.User"/> instances.
+        /// Gets the list of users.
         /// </summary>
-        /// <returns></returns>
-        Task<List<Microsoft.Graph.User>> GetUsersAsync();
+        /// <typeparam name="T">Type of user in the collection.</typeparam>
+        /// <returns>List of the users.</returns>
+        Task<List<T>> GetUsersAsync<T>();
     }
 }

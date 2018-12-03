@@ -21,18 +21,19 @@ namespace Kda.User.FunctionApp.Functions
     /// <summary>
     /// This represents the function entity to get AAD users.
     /// </summary>
-    public class GetAadUsersFunction : FunctionBase<ILogger>, IGetAadUsersFunction
+    public class GetMsalUsersFunction : FunctionBase<ILogger>, IGetMsalUsersFunction
     {
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
         private readonly IGraphServiceHandler _handler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetAadUsersFunction"/> class.
+        /// Initializes a new instance of the <see cref="GetMsalUsersFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
-        public GetAadUsersFunction(AppSettings settings, IMapper mapper, IGraphServiceHandler handler)
+        /// <param name="handler"><see cref="IMsalGraphServiceHandler"/> instance.</param>
+        public GetMsalUsersFunction(AppSettings settings, IMapper mapper, IMsalGraphServiceHandler handler)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -48,11 +49,11 @@ namespace Kda.User.FunctionApp.Functions
             try
             {
                 var users = await this._handler
-                                      .WithCredential<ClientCredential>()
-                                      .WithClientApplication<ConfidentialClientApplication>()
-                                      .WithProvider<MsalAuthenticationProvider>()
+                                      .WithMsalCredential<ClientCredential>()
+                                      .WithMsalClientApplication<ConfidentialClientApplication>()
+                                      .WithMsalProvider<MsalAuthenticationProvider>()
                                       .Build()
-                                      .GetUsersAsync()
+                                      .GetUsersAsync<Microsoft.Graph.User>()
                                       .ConfigureAwait(false);
 
                 result = new OkObjectResult(users);

@@ -15,10 +15,10 @@ namespace Kda.User.FunctionApp.Handlers
     /// <summary>
     /// This represents the builder entity for the <see cref="GraphServiceClient"/> class.
     /// </summary>
-    public class GraphServiceHandler : IGraphServiceHandler
+    public class MsalGraphServiceHandler : IMsalGraphServiceHandler
     {
         private const string Authority = "{0}/{1}/{2}";
-        private const string Scope = "{0}/{1}";
+        private const string Scope = "https://graph.microsoft.com/{0}";
 
         private readonly AppSettings _settings;
 
@@ -30,10 +30,10 @@ namespace Kda.User.FunctionApp.Handlers
         private bool _disposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GraphServiceHandler"/> class.
+        /// Initializes a new instance of the <see cref="MsalGraphServiceHandler"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
-        public GraphServiceHandler(AppSettings settings)
+        public MsalGraphServiceHandler(AppSettings settings)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
@@ -58,7 +58,7 @@ namespace Kda.User.FunctionApp.Handlers
         /// <inheritdoc />
         public IGraphServiceHandler AddAuthenticationProvider()
         {
-            var scopes = this._settings.Auth.Scopes.Select(p => Scope.WithFormat(this._settings.Auth.GraphUri, p));
+            var scopes = this._settings.Auth.Scopes.Select(p => Scope.WithFormat(p));
             this._ap = new MsalAuthenticationProvider(this._cca, scopes);
 
             return this;
@@ -73,12 +73,12 @@ namespace Kda.User.FunctionApp.Handlers
         }
 
         /// <inheritdoc />
-        public async Task<List<Microsoft.Graph.User>> GetUsersAsync()
+        public async Task<List<T>> GetUsersAsync<T>()
         {
             var result = await this._gsc.Users.Request().GetAsync().ConfigureAwait(false);
             var users = result.ToList();
 
-            return users;
+            return (List<T>)Convert.ChangeType(users, typeof(List<T>));
         }
 
         /// <summary>

@@ -13,6 +13,11 @@ namespace Kda.User.FunctionApp.Models
         public virtual Guid UserId { get; set; }
 
         /// <summary>
+        /// Gets or sets the user principal name (UPN).
+        /// </summary>
+        public virtual string Upn { get; set; }
+
+        /// <summary>
         /// Gets or sets the display name on AAD B2C.
         /// </summary>
         public virtual string DisplayName { get; set; }
@@ -31,5 +36,10 @@ namespace Kda.User.FunctionApp.Models
         /// Gets or sets the email on AAD B2C.
         /// </summary>
         public virtual string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date when the record was created on Azure AD B2C.
+        /// </summary>
+        public virtual DateTimeOffset DateJoined { get; set; }
     }
 }
