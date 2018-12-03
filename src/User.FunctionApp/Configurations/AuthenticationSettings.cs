@@ -46,11 +46,6 @@ namespace Kda.User.FunctionApp.Configurations
         public virtual string ApiVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets the URI for Graph API.
-        /// </summary>
-        public virtual string GraphUri { get; set; }
-
-        /// <summary>
         /// Gets or sets the list of scopes for Graph API.
         /// </summary>
         public virtual List<string> Scopes { get; set; }

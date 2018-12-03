@@ -1,34 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Kda.User.FunctionApp.Providers
 {
     /// <summary>
     /// This represents the authentication provider entity for MSAL.
     /// </summary>
-    /// <remarks>https://github.com/microsoftgraph/dotnetcore-console-sample/blob/master/base-console-app/Helpers/MsalAuthenticationProvider.cs</remarks>
-    public class MsalAuthenticationProvider : IAuthenticationProvider
+    public class AdalAuthenticationProvider : IAuthenticationProvider
     {
-        private const string DefaultScope = "https://graph.microsoft.com/.default";
+        private const string ResourceUri = "https://graph.windows.net";
 
-        private ConfidentialClientApplication _cca;
-        private IEnumerable<string> _scopes;
+        private readonly AuthenticationContext _context;
+        private readonly ClientCredential _credential;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsalAuthenticationProvider"/> class.
         /// </summary>
-        /// <param name="cca"><see cref="ConfidentialClientApplication"/> instance.</param>
-        /// <param name="scopes">List of scopes for AAD access.</param>
-        public MsalAuthenticationProvider(ConfidentialClientApplication cca, IEnumerable<string> scopes = null)
+        /// <param name="context"><see cref="AuthenticationContext"/> instance.</param>
+        /// <param name="credential"><see cref="ClientCredential"/> instance.</param>
+        public AdalAuthenticationProvider(AuthenticationContext context, ClientCredential credential)
         {
-            this._cca = cca ?? throw new ArgumentNullException(nameof(cca));
-            this._scopes = scopes ?? new[] { DefaultScope };
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            this._credential = credential ?? throw new ArgumentNullException(nameof(credential));
         }
 
         /// <summary>
@@ -48,8 +46,8 @@ namespace Kda.User.FunctionApp.Providers
         /// <returns>Access token.</returns>
         public async Task<string> GetTokenAsync()
         {
-            var result = await this._cca
-                                   .AcquireTokenForClientAsync(this._scopes)
+            var result = await this._context
+                                   .AcquireTokenAsync(ResourceUri, this._credential)
                                    .ConfigureAwait(false);
 
             return result.AccessToken;
