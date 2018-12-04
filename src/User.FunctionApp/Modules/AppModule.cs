@@ -6,8 +6,10 @@ using AutoMapper;
 using Kda.User.FunctionApp.Configurations;
 using Kda.User.FunctionApp.Functions;
 using Kda.User.FunctionApp.Handlers;
+
 using MailChimp.Net;
 using MailChimp.Net.Interfaces;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using Module = Aliencube.AzureFunctions.Extensions.DependencyInjection.Abstractions.Module;
@@ -31,6 +33,8 @@ namespace Kda.User.FunctionApp.Modules
             services.AddTransient<IGetMsalUsersFunction, GetMsalUsersFunction>();
             services.AddTransient<IGetAdalUsersFunction, GetAdalUsersFunction>();
             services.AddTransient<IAddMailChimpUsersFunction, AddMailChimpUsersFunction>();
+            services.AddTransient<IGetMailChimpUsersFunction, GetMailChimpUsersFunction>();
+            services.AddTransient<IGetMailChimpUserFunction, GetMailChimpUserFunction>();
 
             services.AddTransient<IMsalGraphServiceHandler, MsalGraphServiceHandler>();
             services.AddTransient<IAdalGraphServiceHandler, AdalGraphServiceHandler>();
