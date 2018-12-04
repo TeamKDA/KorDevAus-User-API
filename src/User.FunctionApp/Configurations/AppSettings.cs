@@ -10,6 +10,7 @@ namespace Kda.User.FunctionApp.Configurations
     public class AppSettings
     {
         private const string AuthPropertyKey = "Auth";
+        private const string MailChimpPropertyKey = "MailChimp";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppSettings"/> class.
@@ -21,11 +22,17 @@ namespace Kda.User.FunctionApp.Configurations
                              .Build();
 
             this.Auth = config.Get<AuthenticationSettings>(AuthPropertyKey);
+            this.MailChimp = config.Get<MailChimpSettings>(MailChimpPropertyKey);
         }
 
         /// <summary>
         /// Gets the <see cref="AuthenticationSettings"/> instance.
         /// </summary>
         public virtual AuthenticationSettings Auth { get; }
+
+        /// <summary>
+        /// Gets the <see cref="MailChimpSettings"/> instance.
+        /// </summary>
+        public virtual MailChimpSettings MailChimp { get; }
     }
 }
