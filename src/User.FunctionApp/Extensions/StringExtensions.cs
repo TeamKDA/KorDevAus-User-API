@@ -1,4 +1,6 @@
-﻿namespace Kda.User.FunctionApp.Extensions
+﻿using System;
+
+namespace Kda.User.FunctionApp.Extensions
 {
     /// <summary>
     /// This represents the extension entity for <c>string</c>.
@@ -16,6 +18,21 @@
             var formatted = string.Format(value, args);
 
             return formatted;
+        }
+
+        /// <summary>
+        /// Converts the string into <see cref="DateTimeOffset"/> value.
+        /// </summary>
+        /// <param name="value">Date/time value in string format.</param>
+        /// <returns><see cref="DateTimeOffset"/> value converted.</returns>
+        public static DateTimeOffset ToDateTimeOffset(this string value)
+        {
+            if (DateTimeOffset.TryParse(value, out DateTimeOffset result))
+            {
+                return result;
+            }
+
+            throw new InvalidCastException("Invalid DateTimeOffset string value");
         }
     }
 }

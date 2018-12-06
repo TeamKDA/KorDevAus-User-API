@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using AutoMapper;
 
 using Kda.User.FunctionApp.Handlers;
 using Kda.User.FunctionApp.Providers;
@@ -123,23 +119,6 @@ namespace Kda.User.FunctionApp.Extensions
             handler.AddAuthenticationProvider();
 
             return handler;
-        }
-
-        /// <summary>
-        /// Maps one type to another.
-        /// </summary>
-        /// <typeparam name="TFrom">Type of source instance.</typeparam>
-        /// <typeparam name="TTo">Type of target instance.</typeparam>
-        /// <param name="items">List of items.</param>
-        /// <param name="mapper"><see cref="IMapper"/> instance.</param>
-        /// <returns>List of transformed instances.</returns>
-        public static async Task<List<TTo>> MapAsync<TFrom, TTo>(this Task<List<TFrom>> items, IMapper mapper)
-        {
-            var instances = await items.ConfigureAwait(false);
-
-            var mapped = mapper.Map<List<TTo>>(instances);
-
-            return mapped;
         }
     }
 }

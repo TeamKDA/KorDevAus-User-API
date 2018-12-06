@@ -38,6 +38,7 @@ namespace Kda.User.FunctionApp.Modules
 
             services.AddTransient<IMsalGraphServiceHandler, MsalGraphServiceHandler>();
             services.AddTransient<IAdalGraphServiceHandler, AdalGraphServiceHandler>();
+            services.AddTransient<IMailChimpServiceHandler, MailChimpServiceHandler>();
         }
     }
 }
