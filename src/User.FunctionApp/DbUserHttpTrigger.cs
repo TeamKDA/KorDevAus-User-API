@@ -20,9 +20,9 @@ using ErrorResponse = Kda.User.FunctionApp.Models.ErrorResponse;
 namespace Kda.User.FunctionApp
 {
     /// <summary>
-    /// This represents the HTTP trigger entity for users from MailChimp.
+    /// This represents the HTTP trigger entity for users from database.
     /// </summary>
-    public static partial class MailChimpUserHttpTrigger
+    public static partial class DbUserHttpTrigger
     {
         /// <summary>
         /// Gets the <see cref="IFunctionFactory"/> instance.
@@ -30,20 +30,20 @@ namespace Kda.User.FunctionApp
         public static IFunctionFactory Factory = new FunctionFactory<AppModule>();
 
         /// <summary>
-        /// Invokes the function endpoint to get the list of users from MailChimp.
+        /// Invokes the function endpoint to get the list of users from database.
         /// </summary>
         /// <param name="req"><see cref="HttpRequest"/> instance.</param>
         /// <param name="log"><see cref="ILogger"/> instance.</param>
-        /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from MailChimp.</returns>
-        [FunctionName(nameof(GetMailChimpUsers))]
-        public static async Task<IActionResult> GetMailChimpUsers(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "mc/users")] HttpRequest req,
+        /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from database.</returns>
+        [FunctionName(nameof(GetDbUsers))]
+        public static async Task<IActionResult> GetDbUsers(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "db/users")] HttpRequest req,
             ILogger log)
         {
             IActionResult result;
             try
             {
-                result = await Factory.Create<IGetMailChimpUsersFunction, ILogger>(log)
+                result = await Factory.Create<IGetDbUsersFunction, ILogger>(log)
                                       .InvokeAsync<HttpRequest, IActionResult>(req)
                                       .ConfigureAwait(false);
             }
@@ -59,15 +59,15 @@ namespace Kda.User.FunctionApp
         }
 
         /// <summary>
-        /// Invokes the function endpoint to get the user from MailChimp.
+        /// Invokes the function endpoint to get the user from database.
         /// </summary>
         /// <param name="req"><see cref="HttpRequest"/> instance.</param>
         /// <param name="userId">User Id.</param>
         /// <param name="log"><see cref="ILogger"/> instance.</param>
-        /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from MailChimp.</returns>
-        [FunctionName(nameof(GetMailChimpUser))]
-        public static async Task<IActionResult> GetMailChimpUser(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "mc/users/{userId}")] HttpRequest req,
+        /// <returns>Returns the <see cref="IActionResult"/> containing the user from database.</returns>
+        [FunctionName(nameof(GetDbUser))]
+        public static async Task<IActionResult> GetDbUser(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "db/users/{userId}")] HttpRequest req,
             string userId,
             ILogger log)
         {
@@ -92,14 +92,14 @@ namespace Kda.User.FunctionApp
         }
 
         /// <summary>
-        /// Invokes the function endpoint to add the list of users to MailChimp.
+        /// Invokes the function endpoint to add the list of users to database.
         /// </summary>
         /// <param name="req"><see cref="HttpRequest"/> instance.</param>
         /// <param name="log"><see cref="ILogger"/> instance.</param>
-        /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from MailChimp.</returns>
-        [FunctionName(nameof(AddMailChimpUsers))]
-        public static async Task<IActionResult> AddMailChimpUsers(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "mc/users")] HttpRequest req,
+        /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from database.</returns>
+        [FunctionName(nameof(AddDbUsers))]
+        public static async Task<IActionResult> AddDbUsers(
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "db/users")] HttpRequest req,
             ILogger log)
         {
             IActionResult result;
