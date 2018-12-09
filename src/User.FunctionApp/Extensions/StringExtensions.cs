@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Kda.User.FunctionApp.Extensions
 {
@@ -7,6 +9,32 @@ namespace Kda.User.FunctionApp.Extensions
     /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        /// Checks whether the source contains the value or not, regardless of casing.
+        /// </summary>
+        /// <param name="source">List of string values.</param>
+        /// <param name="value">Value to check.</param>
+        /// <returns><c>True</c>, if the source contains the value; otherwise returns <c>False</c>.</returns>
+        public static bool ContainsEquivalentTo(this IEnumerable<string> source, string value)
+        {
+            var contains = source.Contains(value, StringComparer.CurrentCultureIgnoreCase);
+
+            return contains;
+        }
+
+        /// <summary>
+        /// Checks whether the source string is equivalent to the value or not, regardless of casing.
+        /// </summary>
+        /// <param name="source">Source string.</param>
+        /// <param name="value">Value to check.</param>
+        /// <returns><c>True</c>, if the source string is equivalent to the value; otherwise returns <c>False</c>.</returns>
+        public static bool IsEquivalentTo(this string source, string value)
+        {
+            var equals = source.Equals(value, StringComparison.CurrentCultureIgnoreCase);
+
+            return equals;
+        }
+
         /// <summary>
         /// Formats the given string with arguments.
         /// </summary>

@@ -9,6 +9,7 @@ using FluentAssertions.Common;
 
 using Kda.User.FunctionApp.Configurations;
 using Kda.User.FunctionApp.Modules;
+using Kda.User.FunctionApp.Tests.Fixtures;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,7 @@ namespace Kda.User.FunctionApp.Tests.Modules
         {
             typeof(AppModule)
                 .Should().HaveAccessModifier(CSharpAccessModifier.Public)
-                    .And.Should().NotBeAbstract()
+                    .And.Should().BeAbstract()
                         .And.BeDerivedFrom<Module>();
         }
 
@@ -39,7 +40,7 @@ namespace Kda.User.FunctionApp.Tests.Modules
         [TestMethod]
         public void Given_Instance_Should_HaveAppSettings()
         {
-            var module = new AppModule();
+            var module = new FakeModule();
             var services = new ServiceCollection();
 
             module.Load(services);
@@ -53,7 +54,7 @@ namespace Kda.User.FunctionApp.Tests.Modules
         [TestMethod]
         public void Given_Instance_Should_HaveIMapper()
         {
-            var module = new AppModule();
+            var module = new FakeModule();
             var services = new ServiceCollection();
 
             module.Load(services);

@@ -27,7 +27,7 @@ namespace Kda.User.FunctionApp
         /// <summary>
         /// Gets the <see cref="IFunctionFactory"/> instance.
         /// </summary>
-        public static IFunctionFactory Factory = new FunctionFactory<AppModule>();
+        public static IFunctionFactory Factory = new FunctionFactory<MailChimpModule>();
 
         /// <summary>
         /// Invokes the function endpoint to get the list of users from MailChimp.

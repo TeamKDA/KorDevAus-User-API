@@ -8,11 +8,9 @@ using AutoMapper;
 
 using Kda.User.FunctionApp.Configurations;
 using Kda.User.FunctionApp.Models;
-
-using KorDevAus.Orm;
+using Kda.User.FunctionApp.Services;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Kda.User.FunctionApp.Functions
@@ -24,19 +22,19 @@ namespace Kda.User.FunctionApp.Functions
     {
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
-        private readonly IKdaDbContext _context;
+        private readonly IDbUserService _service;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetMailChimpUsersFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
-        /// <param name="context"><see cref="IKdaDbContext"/> instance.</param>
-        public GetDbUsersFunction(AppSettings settings, IMapper mapper, IKdaDbContext context)
+        /// <param name="service"><see cref="IDbUserService"/> instance.</param>
+        public GetDbUsersFunction(AppSettings settings, IMapper mapper, IDbUserService service)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            this._service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <inheritdoc />
@@ -47,8 +45,8 @@ namespace Kda.User.FunctionApp.Functions
             var result = (IActionResult)null;
             try
             {
-                var users = await this._context.Users
-                                      .ToListAsync()
+                var users = await this._service
+                                      .GetAllUsersAsync()
                                       .ConfigureAwait(false);
 
                 result = new OkObjectResult(users);
