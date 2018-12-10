@@ -7,6 +7,7 @@ using Aliencube.AzureFunctions.Extensions.DependencyInjection.Abstractions;
 using AutoMapper;
 
 using Kda.User.FunctionApp.Configurations;
+using Kda.User.FunctionApp.Extensions;
 using Kda.User.FunctionApp.Models;
 using Kda.User.FunctionApp.Services;
 
@@ -25,7 +26,7 @@ namespace Kda.User.FunctionApp.Functions
         private readonly IDbUserService _service;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetMailChimpUsersFunction"/> class.
+        /// Initializes a new instance of the <see cref="GetDbUsersFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
@@ -45,11 +46,13 @@ namespace Kda.User.FunctionApp.Functions
             var result = (IActionResult)null;
             try
             {
-                var users = await this._service
-                                      .GetAllUsersAsync()
-                                      .ConfigureAwait(false);
+                var response = await this._service
+                                         .GetAllUsersAsync()
+                                         .MapAsync<KorDevAus.Entities.User, DbUser>(this._mapper)
+                                         .BuildResponseAync<DbUserCollectionResponse, DbUser>()
+                                         .ConfigureAwait(false);
 
-                result = new OkObjectResult(users);
+                result = new OkObjectResult(response);
             }
             catch (Exception ex)
             {

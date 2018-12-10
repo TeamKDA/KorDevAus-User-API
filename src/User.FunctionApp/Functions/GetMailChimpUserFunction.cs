@@ -61,13 +61,14 @@ namespace Kda.User.FunctionApp.Functions
 
             try
             {
-                var user = await this._handler
-                                     .Build()
-                                     .GetUserAsync<Member>(opt.UserId)
-                                     .MapAsync<Member, MailChimpUser>(this._mapper)
-                                     .ConfigureAwait(false);
+                var response = await this._handler
+                                         .Build()
+                                         .GetUserAsync<Member>(opt.UserId)
+                                         .MapAsync<Member, MailChimpUser>(this._mapper)
+                                         .BuildResponseAync<MailChimpUserResponse, MailChimpUser>()
+                                         .ConfigureAwait(false);
 
-                result = new OkObjectResult(user);
+                result = new OkObjectResult(response);
             }
             catch (Exception ex)
             {

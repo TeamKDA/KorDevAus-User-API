@@ -3,14 +3,12 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using Kda.User.FunctionApp.Handlers;
-
 namespace Kda.User.FunctionApp.Extensions
 {
     /// <summary>
-    /// This represents the extension entity for the service handler class.
+    /// This represents the extension entity for the mappers.
     /// </summary>
-    public static class ServiceHandlerExtensions
+    public static class MapperExtensions
     {
         /// <summary>
         /// Maps one type to another.

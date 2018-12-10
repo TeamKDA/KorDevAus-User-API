@@ -48,16 +48,17 @@ namespace Kda.User.FunctionApp.Functions
             var result = (IActionResult)null;
             try
             {
-                var users = await this._handler
-                                      .WithAdalCredential<ClientCredential>()
-                                      .WithAdalClientApplication<AuthenticationContext>()
-                                      .WithAdalProvider<AdalAuthenticationProvider>()
-                                      .Build()
-                                      .GetUsersAsync<AdalUser>()
-                                      .MapAsync<AdalUser, AadUser>(this._mapper)
-                                      .ConfigureAwait(false);
+                var response = await this._handler
+                                         .WithAdalCredential<ClientCredential>()
+                                         .WithAdalClientApplication<AuthenticationContext>()
+                                         .WithAdalProvider<AdalAuthenticationProvider>()
+                                         .Build()
+                                         .GetUsersAsync<AdalUser>()
+                                         .MapAsync<AdalUser, AadUser>(this._mapper)
+                                         .BuildResponseAync<AadUserCollectionResponse, AadUser>()
+                                         .ConfigureAwait(false);
 
-                result = new OkObjectResult(users);
+                result = new OkObjectResult(response);
             }
             catch (Exception ex)
             {

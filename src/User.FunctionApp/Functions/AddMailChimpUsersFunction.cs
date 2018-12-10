@@ -68,13 +68,14 @@ namespace Kda.User.FunctionApp.Functions
             {
                 var members = this._mapper.Map<List<Member>>(request.Users);
 
-                var users = await this._handler
-                                      .Build()
-                                      .AddOrUpdateUsersAsync<Member>(members)
-                                      .MapAsync<Member, MailChimpUser>(this._mapper)
-                                      .ConfigureAwait(false);
+                var response = await this._handler
+                                         .Build()
+                                         .AddOrUpdateUsersAsync<Member>(members)
+                                         .MapAsync<Member, MailChimpUser>(this._mapper)
+                                         .BuildResponseAync<MailChimpUserCollectionResponse, MailChimpUser>()
+                                         .ConfigureAwait(false);
 
-                result = new OkObjectResult(users);
+                result = new OkObjectResult(response);
             }
             catch (Exception ex)
             {

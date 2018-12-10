@@ -8,10 +8,9 @@ using AutoMapper;
 
 using Kda.User.FunctionApp.Configurations;
 using Kda.User.FunctionApp.Extensions;
-using Kda.User.FunctionApp.Handlers;
+using Kda.User.FunctionApp.Functions.FunctionOptions;
 using Kda.User.FunctionApp.Models;
-
-using MailChimp.Net.Models;
+using Kda.User.FunctionApp.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,23 +20,23 @@ namespace Kda.User.FunctionApp.Functions
     /// <summary>
     /// This represents the function entity to get users from MailChimp.
     /// </summary>
-    public class GetMailChimpUsersFunction : FunctionBase<ILogger>, IGetMailChimpUsersFunction
+    public class GetDbUserFunction : FunctionBase<ILogger>, IGetDbUserFunction
     {
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
-        private readonly IMailChimpServiceHandler _handler;
+        private readonly IDbUserService _service;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetMailChimpUsersFunction"/> class.
+        /// Initializes a new instance of the <see cref="GetDbUserFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
-        /// <param name="handler"><see cref="IMailChimpServiceHandler"/> instance.</param>
-        public GetMailChimpUsersFunction(AppSettings settings, IMapper mapper, IMailChimpServiceHandler handler)
+        /// <param name="service"><see cref="IDbUserService"/> instance.</param>
+        public GetDbUserFunction(AppSettings settings, IMapper mapper, IDbUserService service)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            this._handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            this._service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <inheritdoc />
@@ -46,13 +45,24 @@ namespace Kda.User.FunctionApp.Functions
             this.Log.LogInformation("C# HTTP trigger function processed a request.");
 
             var result = (IActionResult)null;
+
+            var opt = options as GetDbUserFunctionOptions;
+            if (opt == null)
+            {
+                var statusCode = (int)HttpStatusCode.BadRequest;
+                var value = new ErrorResponse(statusCode, "Options not set");
+
+                result = new ObjectResult(value) { StatusCode = statusCode };
+
+                return (TOutput)result;
+            }
+
             try
             {
-                var response = await this._handler
-                                         .Build()
-                                         .GetUsersAsync<Member>()
-                                         .MapAsync<Member, MailChimpUser>(this._mapper)
-                                         .BuildResponseAync<MailChimpUserCollectionResponse, MailChimpUser>()
+                var response = await this._service
+                                         .GetUserAsync(opt.UserId)
+                                         .MapAsync<KorDevAus.Entities.User, DbUser>(this._mapper)
+                                         .BuildResponseAync<DbUserResponse, DbUser>()
                                          .ConfigureAwait(false);
 
                 result = new OkObjectResult(response);
