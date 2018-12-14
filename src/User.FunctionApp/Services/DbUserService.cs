@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Kda.User.FunctionApp.Extensions;
 
+using KorDevAus.Entities;
 using KorDevAus.Repositories;
 
 namespace Kda.User.FunctionApp.Services
@@ -52,7 +53,53 @@ namespace Kda.User.FunctionApp.Services
         /// <inheritdoc />
         public async Task<List<KorDevAus.Entities.User>> UpsertUsersAsync(IEnumerable<KorDevAus.Entities.User> users)
         {
-            await this._userRepository.UpsertRangeAsync(users).ConfigureAwait(false);
+            var processedUsers = new List<KorDevAus.Entities.User>();
+
+            var group = (await this._groupRepository.GetAllAsync().ConfigureAwait(false)).SingleOrDefault(p => p.Name.IsEquivalentTo("Users"));
+
+            foreach (var user in users)
+            {
+                var dbUser = (await this.GetAllUsersAsync().ConfigureAwait(false)).SingleOrDefault(p => p.Email.IsEquivalentTo(user.Email));
+                if (dbUser == null)
+                {
+                    var userId = Guid.NewGuid();
+                    user.Id = userId;
+
+                    var gu = new GroupUser()
+                                 {
+                                     Id = Guid.NewGuid(),
+                                     UserId = userId,
+                                     GroupId = group.Id,
+                                     DateJoined = user.GroupUsers.First().DateJoined
+                                 };
+                    user.GroupUsers = new[] { gu }.ToList();
+                }
+                else
+                {
+                    var userId = dbUser.Id;
+                    user.Id = userId;
+
+                    var gu = dbUser.GroupUsers.SingleOrDefault(p => p.GroupId == group.Id);
+                    if (gu == null)
+                    {
+                        gu = new GroupUser()
+                                 {
+                                     Id = Guid.NewGuid(),
+                                     UserId = userId,
+                                     GroupId = group.Id,
+                                     DateJoined = user.GroupUsers.First().DateJoined
+                                 };
+                    }
+
+                    user.GroupUsers = new[] { gu }.ToList();
+                }
+
+                user.Id = dbUser == null ? Guid.NewGuid() : dbUser.Id;
+
+                processedUsers.Add(user);
+            }
+
+            await this._userRepository.UpsertRangeAsync(processedUsers).ConfigureAwait(false);
 
             var upsertedUsers = (await this.GetAllUsersAsync().ConfigureAwait(false))
                                     .Where(p => users.Select(q => q.Email).ContainsEquivalentTo(p.Email))

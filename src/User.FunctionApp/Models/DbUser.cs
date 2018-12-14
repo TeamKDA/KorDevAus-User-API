@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Kda.User.FunctionApp.Models
 {
@@ -8,9 +9,17 @@ namespace Kda.User.FunctionApp.Models
     public class DbUser
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="DbUser"/> class.
+        /// </summary>
+        public DbUser()
+        {
+            this.Groups = new List<DbGroup>();
+        }
+
+        /// <summary>
         /// Gets or sets the user ID.
         /// </summary>
-        public virtual Guid UserId { get; set; }
+        public virtual Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets the display name on AAD B2C.
@@ -36,6 +45,7 @@ namespace Kda.User.FunctionApp.Models
         /// Gets or sets the profile image URL.
         /// </summary>
         public virtual string ProfileImageUrl { get; set; }
+
         /// <summary>
         /// Gets or sets the ID from Azure AD B2C.
         /// </summary>
@@ -44,6 +54,11 @@ namespace Kda.User.FunctionApp.Models
         /// <summary>
         /// Gets or sets the ID from MailChimp.
         /// </summary>
-        public virtual Guid MailChimpId { get; set; }
+        public virtual string MailChimpId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of groups.
+        /// </summary>
+        public virtual List<DbGroup> Groups { get; set; }
     }
 }
