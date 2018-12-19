@@ -22,7 +22,7 @@ namespace Kda.User.FunctionApp.Modules
 
             services.AddSingleton<AppSettings>();
 
-            services.AddSingleton<IKdaDbContext, KdaDbContext>(p =>
+            services.AddTransient<IKdaDbContext, KdaDbContext>(p =>
             {
                 var builder = new DbContextOptionsBuilder<KdaDbContext>()
                                   .UseSqlServer(p.GetService<AppSettings>().KdaDbConnectionString);
@@ -38,6 +38,8 @@ namespace Kda.User.FunctionApp.Modules
             services.AddTransient<IDbUserService, DbUserService>();
 
             services.AddTransient<IGetDbUsersFunction, GetDbUsersFunction>();
+            services.AddTransient<IGetDbUserFunction, GetDbUserFunction>();
+            services.AddTransient<IAddDbUsersFunction, AddDbUsersFunction>();
         }
     }
 }

@@ -64,10 +64,8 @@ namespace Kda.User.FunctionApp.Functions
 
             try
             {
-                var users = this._mapper.Map<List<KorDevAus.Entities.User>>(request.Users);
-
                 var response = await this._service
-                                         .UpsertUsersAsync(users)
+                                         .UpsertUsersAsync(request.Users)
                                          .MapAsync<KorDevAus.Entities.User, DbUser>(this._mapper)
                                          .BuildResponseAync<DbUserCollectionResponse, DbUser>()
                                          .ConfigureAwait(false);

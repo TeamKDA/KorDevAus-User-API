@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AutoMapper;
+
 using Kda.User.FunctionApp.Extensions;
+using Kda.User.FunctionApp.Models;
 
 using KorDevAus.Entities;
 using KorDevAus.Repositories;
@@ -15,6 +18,7 @@ namespace Kda.User.FunctionApp.Services
     /// </summary>
     public class DbUserService : IDbUserService
     {
+        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IGroupUserRepository groupUserRepository;
@@ -24,11 +28,13 @@ namespace Kda.User.FunctionApp.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="DbUserService"/> class.
         /// </summary>
+        /// <param name="mapper"><see cref="IMapper"/> instance.</param>
         /// <param name="userRepository"><see cref="IUserRepository"/> instance.</param>
         /// <param name="groupRepository"><see cref="IGroupRepository"/> instance.</param>
         /// <param name="groupUserRepository"><see cref="IGroupUserRepository"/> instance.</param>
-        public DbUserService(IUserRepository userRepository, IGroupRepository groupRepository, IGroupUserRepository groupUserRepository)
+        public DbUserService(IMapper mapper, IUserRepository userRepository, IGroupRepository groupRepository, IGroupUserRepository groupUserRepository)
         {
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this._userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this._groupRepository = groupRepository ?? throw new ArgumentNullException(nameof(groupRepository));
             this.groupUserRepository = groupUserRepository ?? throw new ArgumentNullException(nameof(groupUserRepository));
@@ -51,72 +57,101 @@ namespace Kda.User.FunctionApp.Services
         }
 
         /// <inheritdoc />
-        public async Task<List<KorDevAus.Entities.User>> UpsertUsersAsync(IEnumerable<KorDevAus.Entities.User> users)
+        public async Task<KorDevAus.Entities.User> GetUserByEmailAsync(string email)
         {
-            var processedUsers = new List<KorDevAus.Entities.User>();
+            var user = await this._userRepository.GetByEmailAsync(email).ConfigureAwait(false);
 
-            var group = (await this._groupRepository.GetAllAsync().ConfigureAwait(false)).SingleOrDefault(p => p.Name.IsEquivalentTo("Users"));
-
-            foreach (var user in users)
-            {
-                var dbUser = (await this.GetAllUsersAsync().ConfigureAwait(false)).SingleOrDefault(p => p.Email.IsEquivalentTo(user.Email));
-                if (dbUser == null)
-                {
-                    var userId = Guid.NewGuid();
-                    user.Id = userId;
-
-                    var gu = new GroupUser()
-                                 {
-                                     Id = Guid.NewGuid(),
-                                     UserId = userId,
-                                     GroupId = group.Id,
-                                     DateJoined = user.GroupUsers.First().DateJoined
-                                 };
-                    user.GroupUsers = new[] { gu }.ToList();
-                }
-                else
-                {
-                    var userId = dbUser.Id;
-                    user.Id = userId;
-
-                    var gu = dbUser.GroupUsers.SingleOrDefault(p => p.GroupId == group.Id);
-                    if (gu == null)
-                    {
-                        gu = new GroupUser()
-                                 {
-                                     Id = Guid.NewGuid(),
-                                     UserId = userId,
-                                     GroupId = group.Id,
-                                     DateJoined = user.GroupUsers.First().DateJoined
-                                 };
-                    }
-
-                    user.GroupUsers = new[] { gu }.ToList();
-                }
-
-                user.Id = dbUser == null ? Guid.NewGuid() : dbUser.Id;
-
-                processedUsers.Add(user);
-            }
-
-            await this._userRepository.UpsertRangeAsync(processedUsers).ConfigureAwait(false);
-
-            var upsertedUsers = (await this.GetAllUsersAsync().ConfigureAwait(false))
-                                    .Where(p => users.Select(q => q.Email).ContainsEquivalentTo(p.Email))
-                                    .ToList();
-
-            return upsertedUsers;
+            return user;
         }
 
         /// <inheritdoc />
-        public async Task<KorDevAus.Entities.User> UpsertUserAsync(KorDevAus.Entities.User user)
+        public async Task<List<KorDevAus.Entities.User>> UpsertUsersAsync(IEnumerable<DbUser> users)
         {
-            await this._userRepository.UpsertAsync(user).ConfigureAwait(false);
+            var upsertedUsers = new List<KorDevAus.Entities.User>();
+            var now = DateTimeOffset.UtcNow;
+            var group = await this._groupRepository.GetByNameAsync("Users").ConfigureAwait(false);
 
-            var upsertedUser = (await this.GetAllUsersAsync().ConfigureAwait(false))
-                                   .SingleOrDefault(p => p.Email.IsEquivalentTo(user.Email));
+            foreach (var user in users)
+            {
+                var dbUser = await this.BuildUserAsync(user, group.Id, now).ConfigureAwait(false);
+                upsertedUsers.Add(dbUser);
+            }
 
-            return upsertedUser;
+            await this._userRepository.UpsertRangeAsync(upsertedUsers).ConfigureAwait(false);
+
+            var processedUsers = (await this.GetAllUsersAsync().ConfigureAwait(false))
+                                     .Where(p => users.Select(q => q.Email)
+                                                      .ContainsEquivalentTo(p.Email))
+                                     .ToList();
+
+            return processedUsers;
+        }
+
+        /// <inheritdoc />
+        public async Task<KorDevAus.Entities.User> UpsertUserAsync(DbUser user)
+        {
+            var now = DateTimeOffset.UtcNow;
+            var group = await this._groupRepository.GetByNameAsync("Users").ConfigureAwait(false);
+            var upsertedUser = await this.BuildUserAsync(user, group.Id, now).ConfigureAwait(false);
+
+            await this._userRepository.UpsertAsync(upsertedUser).ConfigureAwait(false);
+
+            var processedUser = await this.GetUserByEmailAsync(user.Email).ConfigureAwait(false);
+
+            return processedUser;
+        }
+
+        private async Task<KorDevAus.Entities.User> BuildUserAsync(DbUser user, Guid groupId, DateTimeOffset now)
+        {
+            var gu = (GroupUser)null;
+            var userId = Guid.NewGuid();
+
+            var dbUser = await this._userRepository.GetByEmailAsync(user.Email).ConfigureAwait(false);
+            if (dbUser == null)
+            {
+                dbUser = this._mapper.Map<KorDevAus.Entities.User>(user);
+                dbUser.Id = userId;
+                dbUser.DateCreated = now;
+
+                gu = new GroupUser()
+                         {
+                             Id = Guid.NewGuid(),
+                             UserId = userId,
+                             GroupId = groupId,
+                             DateJoined = user.DateJoined.GetValueOrDefault(now)
+                         };
+
+                dbUser.GroupUsers = new[] { gu }.ToList();
+
+                return dbUser;
+            }
+
+            userId = dbUser.Id;
+            dbUser = this._mapper.Map<DbUser, KorDevAus.Entities.User>(user, dbUser);
+            dbUser.Id = userId;
+
+            if (dbUser.GroupUsers == null)
+            {
+                dbUser.GroupUsers = new List<GroupUser>();
+            }
+
+            gu = dbUser.GroupUsers.SingleOrDefault(p => p.GroupId == groupId);
+            if (gu == null)
+            {
+                gu = new GroupUser()
+                         {
+                             Id = Guid.NewGuid(),
+                             UserId = userId,
+                             GroupId = groupId,
+                             DateJoined = user.DateJoined.GetValueOrDefault(now)
+                         };
+
+                dbUser.GroupUsers.Add(gu);
+            }
+
+            dbUser.DateUpdated = now;
+
+            return dbUser;
         }
 
         /// <summary>

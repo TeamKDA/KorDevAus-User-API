@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using Kda.User.FunctionApp.Models;
 
@@ -25,8 +23,20 @@ namespace Kda.User.FunctionApp.Mappers
                 .ForMember(d => d.AadId, o => o.MapFrom(s => s.ActiveDirectoryId))
                 .ForMember(d => d.ProfileImageUrl, o => o.MapFrom(s => s.ProfileImageUrl))
                 .ForMember(d => d.MailChimpId, o => o.MapFrom(s => s.MailChimpId))
+                .ForMember(d => d.DateJoined, o => o.Ignore())
                 .ForMember(d => d.Groups, o => o.MapFrom(s => s.GroupUsers))
-                //.ForMember(d => d.Groups, o => o.MapFrom(s => s.GroupUsers.Select(q => q.Group)))
+                ;
+
+            this.CreateMap<DbUser, KorDevAus.Entities.User>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.DisplayName))
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
+                .ForMember(d => d.LastName, o => o.MapFrom(s => s.LastName))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.Email))
+                .ForMember(d => d.ActiveDirectoryId, o => o.MapFrom(s => s.AadId))
+                .ForMember(d => d.ProfileImageUrl, o => o.MapFrom(s => s.ProfileImageUrl))
+                .ForMember(d => d.MailChimpId, o => o.MapFrom(s => s.MailChimpId))
+                //.ForMember(d => d.GroupUsers, o => o.MapFrom(s => s.Groups))
                 ;
         }
     }

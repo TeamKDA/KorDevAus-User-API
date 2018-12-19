@@ -71,12 +71,12 @@ namespace Kda.User.FunctionApp
             string userId,
             ILogger log)
         {
-            var options = new GetMailChimpUserFunctionOptions() { UserId = userId };
+            var options = new GetDbUserFunctionOptions() { UserId = Guid.Parse(userId) };
 
             IActionResult result;
             try
             {
-                result = await Factory.Create<IGetMailChimpUserFunction, ILogger>(log)
+                result = await Factory.Create<IGetDbUserFunction, ILogger>(log)
                                       .InvokeAsync<HttpRequest, IActionResult>(req, options)
                                       .ConfigureAwait(false);
             }
@@ -99,13 +99,13 @@ namespace Kda.User.FunctionApp
         /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from database.</returns>
         [FunctionName(nameof(AddDbUsers))]
         public static async Task<IActionResult> AddDbUsers(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "db/users")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "db/users/bulk")] HttpRequest req,
             ILogger log)
         {
             IActionResult result;
             try
             {
-                result = await Factory.Create<IAddMailChimpUsersFunction, ILogger>(log)
+                result = await Factory.Create<IAddDbUsersFunction, ILogger>(log)
                                       .InvokeAsync<HttpRequest, IActionResult>(req)
                                       .ConfigureAwait(false);
             }

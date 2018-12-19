@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Kda.User.FunctionApp.Models;
+
 namespace Kda.User.FunctionApp.Services
 {
     /// <summary>
@@ -23,17 +25,24 @@ namespace Kda.User.FunctionApp.Services
         Task<KorDevAus.Entities.User> GetUserAsync(Guid id);
 
         /// <summary>
+        /// Gets the user with the given email.
+        /// </summary>
+        /// <param name="email">Email address.</param>
+        /// <returns>The user.</returns>
+        Task<KorDevAus.Entities.User> GetUserByEmailAsync(string email);
+
+        /// <summary>
         /// Upserts the list of users.
         /// </summary>
-        /// <param name="users">List of users.</param>
-        /// <returns>List of users upserted.</returns>
-        Task<List<KorDevAus.Entities.User>> UpsertUsersAsync(IEnumerable<KorDevAus.Entities.User> users);
+        /// <param name="users">List of <see cref="DbUser"/> instances.</param>
+        /// <returns>List of <see cref="KorDevAus.Entities.User"/> instances upserted.</returns>
+        Task<List<KorDevAus.Entities.User>> UpsertUsersAsync(IEnumerable<DbUser> users);
 
         /// <summary>
         /// Upserts the user.
         /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns>The user upserted.</returns>
-        Task<KorDevAus.Entities.User> UpsertUserAsync(KorDevAus.Entities.User user);
+        /// <param name="user">The <see cref="DbUser"/> instance.</param>
+        /// <returns>The <see cref="KorDevAus.Entities.User"/> instance upserted.</returns>
+        Task<KorDevAus.Entities.User> UpsertUserAsync(DbUser user);
     }
 }

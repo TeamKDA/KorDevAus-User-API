@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 namespace Kda.User.FunctionApp.Models
 {
     /// <summary>
@@ -55,6 +57,12 @@ namespace Kda.User.FunctionApp.Models
         /// Gets or sets the ID from MailChimp.
         /// </summary>
         public virtual string MailChimpId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date when the user has joined.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public virtual DateTimeOffset? DateJoined { get; set; }
 
         /// <summary>
         /// Gets or sets the list of groups.

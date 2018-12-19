@@ -23,7 +23,7 @@ namespace Kda.User.FunctionApp.Models
         public virtual string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the date when the user joined.
+        /// Gets or sets the date when the user has joined.
         /// </summary>
         public virtual DateTimeOffset DateJoined { get; set; }
     }
