@@ -18,7 +18,6 @@ namespace Kda.User.FunctionApp.Handlers
     public class MsalGraphServiceHandler : IMsalGraphServiceHandler
     {
         private const string Authority = "{0}/{1}/{2}";
-        private const string Scope = "https://graph.microsoft.com/{0}";
 
         private readonly AppSettings _settings;
 
@@ -49,7 +48,7 @@ namespace Kda.User.FunctionApp.Handlers
         /// <inheritdoc />
         public IGraphServiceHandler AddClientApplication()
         {
-            var authority = Authority.WithFormat(this._settings.Auth.BaseUri.TrimEnd('/'), this._settings.Auth.TenantId, this._settings.Auth.ApiVersion);
+            var authority = Authority.WithFormat(this._settings.Auth.AuthorityUri.TrimEnd('/'), this._settings.Auth.TenantId, this._settings.Auth.MsalApiVersion);
             this._cca = new ConfidentialClientApplication(this._settings.Auth.ClientId, authority, this._settings.Auth.RedirectUri, this._cc, null, null);
 
             return this;
@@ -58,7 +57,7 @@ namespace Kda.User.FunctionApp.Handlers
         /// <inheritdoc />
         public IGraphServiceHandler AddAuthenticationProvider()
         {
-            var scopes = this._settings.Auth.Scopes.Select(p => Scope.WithFormat(p));
+            var scopes = this._settings.Auth.MsalScopes.Select(p => $"{this._settings.Auth.MsalBaseUri.TrimEnd('/')}/{p}");
             this._ap = new MsalAuthenticationProvider(this._cca, scopes);
 
             return this;

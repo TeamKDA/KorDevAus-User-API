@@ -19,7 +19,6 @@ namespace Kda.User.FunctionApp.Handlers
     public class AdalGraphServiceHandler : IAdalGraphServiceHandler
     {
         private const string Authority = "{0}/{1}";
-        private const string ResourceUri = "https://graph.windows.net";
 
         private readonly AppSettings _settings;
         private readonly HttpClient _client;
@@ -52,7 +51,7 @@ namespace Kda.User.FunctionApp.Handlers
         /// <inheritdoc />
         public IGraphServiceHandler AddClientApplication()
         {
-            var authority = Authority.WithFormat(this._settings.Auth.BaseUri.TrimEnd('/'), this._settings.Auth.TenantId);
+            var authority = Authority.WithFormat(this._settings.Auth.AuthorityUri.TrimEnd('/'), this._settings.Auth.TenantId);
             this._ac = new AuthenticationContext(authority);
 
             return this;
@@ -75,7 +74,7 @@ namespace Kda.User.FunctionApp.Handlers
         /// <inheritdoc />
         public async Task<List<T>> GetUsersAsync<T>()
         {
-            string url = $"{ResourceUri.TrimEnd('/')}/{this._settings.Auth.TenantId}/users?api-version=1.6";
+            string url = $"{this._settings.Auth.AdalBaseUri.TrimEnd('/')}/{this._settings.Auth.TenantId}/users?api-version={this._settings.Auth.AdalApiVersion}";
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             using (var response = await this._client.SendAsync(request, this._ap).ConfigureAwait(false))
             {

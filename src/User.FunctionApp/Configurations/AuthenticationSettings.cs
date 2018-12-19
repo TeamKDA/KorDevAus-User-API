@@ -12,7 +12,7 @@ namespace Kda.User.FunctionApp.Configurations
         /// </summary>
         public AuthenticationSettings()
         {
-            this.Scopes = new List<string>();
+            this.MsalScopes = new List<string>();
         }
 
         /// <summary>
@@ -36,18 +36,33 @@ namespace Kda.User.FunctionApp.Configurations
         public virtual string RedirectUri { get; set; }
 
         /// <summary>
-        /// Gets or sets the base URI for authentication.
+        /// Gets or sets the authority URI for authentication.
         /// </summary>
-        public virtual string BaseUri { get; set; }
+        public virtual string AuthorityUri { get; set; }
 
         /// <summary>
-        /// Gets or sets the API version for authentication.
+        /// Gets or sets the base URI for authentication through ADAL.
         /// </summary>
-        public virtual string ApiVersion { get; set; }
+        public virtual string AdalBaseUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the API version for authentication through ADAL.
+        /// </summary>
+        public virtual string AdalApiVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base URI for authentication through MSAL.
+        /// </summary>
+        public virtual string MsalBaseUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the API version for authentication through MSAL.
+        /// </summary>
+        public virtual string MsalApiVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the list of scopes for Graph API.
         /// </summary>
-        public virtual List<string> Scopes { get; set; }
+        public virtual List<string> MsalScopes { get; set; }
     }
 }
