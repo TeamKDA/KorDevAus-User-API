@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using Kda.User.FunctionApp.Extensions;
 using Kda.User.FunctionApp.Models;
 
 using KorDevAus.Entities;
@@ -57,6 +56,14 @@ namespace Kda.User.FunctionApp.Services
         }
 
         /// <inheritdoc />
+        public async Task<List<KorDevAus.Entities.User>> GetUsersByEmailsAsync(IEnumerable<string> emails)
+        {
+            var users = await this._userRepository.GetByEmailsAsync(emails).ConfigureAwait(false);
+
+            return users;
+        }
+
+        /// <inheritdoc />
         public async Task<KorDevAus.Entities.User> GetUserByEmailAsync(string email)
         {
             var user = await this._userRepository.GetByEmailAsync(email).ConfigureAwait(false);
@@ -79,10 +86,7 @@ namespace Kda.User.FunctionApp.Services
 
             await this._userRepository.UpsertRangeAsync(upsertedUsers).ConfigureAwait(false);
 
-            var processedUsers = (await this.GetAllUsersAsync().ConfigureAwait(false))
-                                     .Where(p => users.Select(q => q.Email)
-                                                      .ContainsEquivalentTo(p.Email))
-                                     .ToList();
+            var processedUsers = await this.GetUsersByEmailsAsync(users.Select(p => p.Email)).ConfigureAwait(false);
 
             return processedUsers;
         }

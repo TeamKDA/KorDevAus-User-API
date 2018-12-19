@@ -12,23 +12,30 @@ namespace Kda.User.FunctionApp.Services
     public interface IDbUserService : IDisposable
     {
         /// <summary>
-        /// Gets the all list of users.
+        /// Gets the all list of <see cref="KorDevAus.Entities.User"/> instances.
         /// </summary>
-        /// <returns>All list of users.</returns>
+        /// <returns>All list of <see cref="KorDevAus.Entities.User"/> instances.</returns>
         Task<List<KorDevAus.Entities.User>> GetAllUsersAsync();
 
         /// <summary>
         /// Gets the user.
         /// </summary>
         /// <param name="id">User Id.</param>
-        /// <returns>The user.</returns>
+        /// <returns><see cref="KorDevAus.Entities.User"/> instance.</returns>
         Task<KorDevAus.Entities.User> GetUserAsync(Guid id);
+
+        /// <summary>
+        /// Gets the list of users having the given emails.
+        /// </summary>
+        /// <param name="emails">List of email addresses.</param>
+        /// <returns>List of <see cref="KorDevAus.Entities.User"/> instances having the given emails.</returns>
+        Task<List<KorDevAus.Entities.User>> GetUsersByEmailsAsync(IEnumerable<string> emails);
 
         /// <summary>
         /// Gets the user with the given email.
         /// </summary>
         /// <param name="email">Email address.</param>
-        /// <returns>The user.</returns>
+        /// <returns><see cref="KorDevAus.Entities.User"/> instance.</returns>
         Task<KorDevAus.Entities.User> GetUserByEmailAsync(string email);
 
         /// <summary>
