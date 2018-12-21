@@ -9,10 +9,10 @@
     <PackageReference Include="Aliencube.AzureFunctions.Extensions.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="KorDevAus.Repositories" Version="1.0.5" />
-    <PackageReference Include="MailChimp.Net.V3" Version="3.4.0" />
+    <PackageReference Include="MailChimp.Net.V3" Version="3.5.0" />
     <PackageReference Include="Microsoft.Graph" Version="1.12.0" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="2.5.0-preview" />
-    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.4.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="2.6.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.4.2" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup>
