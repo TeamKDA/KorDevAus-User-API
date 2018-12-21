@@ -55,25 +55,37 @@ namespace Kda.User.FunctionApp.Tests.Configurations
                     .And.BeWritable();
 
             typeof(AuthenticationSettings)
-                .Should().HaveProperty<string>("BaseUri")
+                .Should().HaveProperty<string>("AuthorityUri")
                     .Which.Should().BeVirtual()
                 .And.BeReadable()
                     .And.BeWritable();
 
             typeof(AuthenticationSettings)
-                .Should().HaveProperty<string>("ApiVersion")
+                .Should().HaveProperty<string>("AdalBaseUri")
                     .Which.Should().BeVirtual()
                 .And.BeReadable()
                     .And.BeWritable();
 
             typeof(AuthenticationSettings)
-                .Should().HaveProperty<string>("GraphUri")
+                .Should().HaveProperty<string>("AdalApiVersion")
                     .Which.Should().BeVirtual()
                 .And.BeReadable()
                     .And.BeWritable();
 
             typeof(AuthenticationSettings)
-                .Should().HaveProperty<List<string>>("Scopes")
+                .Should().HaveProperty<string>("MsalBaseUri")
+                    .Which.Should().BeVirtual()
+                .And.BeReadable()
+                    .And.BeWritable();
+
+            typeof(AuthenticationSettings)
+                .Should().HaveProperty<string>("MsalApiVersion")
+                    .Which.Should().BeVirtual()
+                .And.BeReadable()
+                    .And.BeWritable();
+
+            typeof(AuthenticationSettings)
+                .Should().HaveProperty<List<string>>("MsalScopes")
                     .Which.Should().BeVirtual()
                 .And.BeReadable()
                     .And.BeWritable();
