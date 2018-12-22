@@ -53,7 +53,7 @@ namespace Kda.User.FunctionApp.Functions
                                          .WithAdalClientApplication<AuthenticationContext>()
                                          .WithAdalProvider<AdalAuthenticationProvider>()
                                          .Build()
-                                         .GetUsersAsync<AdalUser>()
+                                         .GetUsersDeltaAsync<AdalUser>()
                                          .MapAsync<AdalUser, AadUser>(this._mapper)
                                          .BuildResponseAync<AadUserCollectionResponse, AadUser>()
                                          .ConfigureAwait(false);

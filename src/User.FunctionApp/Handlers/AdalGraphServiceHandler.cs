@@ -84,6 +84,20 @@ namespace Kda.User.FunctionApp.Handlers
             }
         }
 
+        /// <inheritdoc />
+        public async Task<List<T>> GetUsersDeltaAsync<T>()
+        {
+            string url = $"{this._settings.Auth.AdalBaseUri.TrimEnd('/')}/{this._settings.Auth.TenantId}/users?api-version={this._settings.Auth.AdalApiVersion}&$filter=isof('Microsoft.DirectoryServices.User')&deltaLink=";
+            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+            using (var response = await this._client.SendAsync(request, this._ap).ConfigureAwait(false))
+            {
+                var serialised = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var users = await response.Content.ReadAsAsync<AdalUserCollection>().ConfigureAwait(false);
+
+                return (List<T>)Convert.ChangeType(users.Value, typeof(List<T>));
+            }
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

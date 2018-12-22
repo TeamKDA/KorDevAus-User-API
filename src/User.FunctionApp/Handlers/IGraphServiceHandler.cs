@@ -39,5 +39,12 @@ namespace Kda.User.FunctionApp.Handlers
         /// <typeparam name="T">Type of user in the collection.</typeparam>
         /// <returns>List of the users.</returns>
         Task<List<T>> GetUsersAsync<T>();
+
+        /// <summary>
+        /// Gets the list of users delta.
+        /// </summary>
+        /// <typeparam name="T">Type of user in the collection.</typeparam>
+        /// <returns>List of the users delta.</returns>
+        Task<List<T>> GetUsersDeltaAsync<T>();
     }
 }

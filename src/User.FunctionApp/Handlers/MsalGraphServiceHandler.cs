@@ -80,6 +80,12 @@ namespace Kda.User.FunctionApp.Handlers
             return (List<T>)Convert.ChangeType(users, typeof(List<T>));
         }
 
+        /// <inheritdoc />
+        public async Task<List<T>> GetUsersDeltaAsync<T>()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
