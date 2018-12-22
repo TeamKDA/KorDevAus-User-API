@@ -19,21 +19,21 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 namespace Kda.User.FunctionApp.Functions
 {
     /// <summary>
-    /// This represents the function entity to get AAD users.
+    /// This represents the function entity to get AAD users delta.
     /// </summary>
-    public class GetAdalUsersFunction : FunctionBase<ILogger>, IGetAdalUsersFunction
+    public class GetAdalUsersDeltaFunction : FunctionBase<ILogger>, IGetAdalUsersDeltaFunction
     {
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
         private readonly IGraphServiceHandler _handler;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetAdalUsersFunction"/> class.
+        /// Initializes a new instance of the <see cref="GetAdalUsersDeltaFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
         /// <param name="handler"><see cref="IAdalGraphServiceHandler"/> instance.</param>
-        public GetAdalUsersFunction(AppSettings settings, IMapper mapper, IAdalGraphServiceHandler handler)
+        public GetAdalUsersDeltaFunction(AppSettings settings, IMapper mapper, IAdalGraphServiceHandler handler)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

@@ -21,6 +21,7 @@ namespace Kda.User.FunctionApp.Modules
 
             services.AddTransient<IGetMsalUsersFunction, GetMsalUsersFunction>();
             services.AddTransient<IGetAdalUsersFunction, GetAdalUsersFunction>();
+            services.AddTransient<IGetAdalUsersDeltaFunction, GetAdalUsersDeltaFunction>();
 
             services.AddTransient<IMsalGraphServiceHandler, MsalGraphServiceHandler>();
             services.AddTransient<IAdalGraphServiceHandler, AdalGraphServiceHandler>();

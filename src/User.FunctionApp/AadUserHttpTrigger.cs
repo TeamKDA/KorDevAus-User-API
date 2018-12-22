@@ -85,5 +85,34 @@ namespace Kda.User.FunctionApp
 
             return result;
         }
+
+        /// <summary>
+        /// Invokes the function endpoint to get the list of users from the last check-in, through ADAL.
+        /// </summary>
+        /// <param name="req"><see cref="HttpRequest"/> instance.</param>
+        /// <param name="log"><see cref="ILogger"/> instance.</param>
+        /// <returns>Returns the <see cref="IActionResult"/> containing the list of AAD B2C users.</returns>
+        [FunctionName(nameof(GetAdalUsersDelta))]
+        public static async Task<IActionResult> GetAdalUsersDelta(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "adal/users/delta")] HttpRequest req,
+            ILogger log)
+        {
+            IActionResult result;
+            try
+            {
+                result = await Factory.Create<IGetAdalUsersDeltaFunction, ILogger>(log)
+                                      .InvokeAsync<HttpRequest, IActionResult>(req)
+                                      .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                var statusCode = (int)HttpStatusCode.InternalServerError;
+                var value = new ErrorResponse(statusCode, ex.Message);
+
+                result = new ObjectResult(value) { StatusCode = statusCode };
+            }
+
+            return result;
+        }
     }
 }
