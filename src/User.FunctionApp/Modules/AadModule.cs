@@ -17,8 +17,6 @@ namespace Kda.User.FunctionApp.Modules
         {
             base.Load(services);
 
-            services.AddSingleton<HttpClient>();
-
             services.AddTransient<IGetMsalUsersFunction, GetMsalUsersFunction>();
             services.AddTransient<IGetAdalUsersFunction, GetAdalUsersFunction>();
             services.AddTransient<IGetAdalUsersDeltaFunction, GetAdalUsersDeltaFunction>();

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Net.Http;
+using System.Reflection;
 
 using AutoMapper;
 
@@ -19,6 +20,8 @@ namespace Kda.User.FunctionApp.Modules
         public override void Load(IServiceCollection services)
         {
             services.AddSingleton<AppSettings>();
+
+            services.AddSingleton<HttpClient>();
 
             services.AddAutoMapper(Assembly.GetAssembly(this.GetType()));
         }
