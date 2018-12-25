@@ -20,8 +20,6 @@ namespace Kda.User.FunctionApp.Modules
         {
             base.Load(services);
 
-            services.AddSingleton<AppSettings>();
-
             services.AddTransient<IKdaDbContext, KdaDbContext>(p =>
             {
                 var builder = new DbContextOptionsBuilder<KdaDbContext>()

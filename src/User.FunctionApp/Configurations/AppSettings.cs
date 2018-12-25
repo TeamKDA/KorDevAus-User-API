@@ -11,6 +11,7 @@ namespace Kda.User.FunctionApp.Configurations
     {
         private const string AuthPropertyKey = "Auth";
         private const string MailChimpPropertyKey = "MailChimp";
+        private const string SwaggerKey = "Swagger";
         private const string KdaDbConnectionKey = "KorDevAus";
 
         /// <summary>
@@ -24,6 +25,7 @@ namespace Kda.User.FunctionApp.Configurations
 
             this.Auth = config.Get<AuthenticationSettings>(AuthPropertyKey);
             this.MailChimp = config.Get<MailChimpSettings>(MailChimpPropertyKey);
+            this.Swagger = config.Get<SwaggerSettings>(SwaggerKey);
             this.KdaDbConnectionString = config.GetConnectionString(KdaDbConnectionKey);
         }
 
@@ -36,6 +38,11 @@ namespace Kda.User.FunctionApp.Configurations
         /// Gets the <see cref="MailChimpSettings"/> instance.
         /// </summary>
         public virtual MailChimpSettings MailChimp { get; }
+
+        /// <summary>
+        /// Gets the <see cref="SwaggerSettings"/> instance.
+        /// </summary>
+        public virtual SwaggerSettings Swagger { get; }
 
         /// <summary>
         /// Gets the database connection string.
