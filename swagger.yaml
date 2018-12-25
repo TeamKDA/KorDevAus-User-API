@@ -1,0 +1,400 @@
+swagger: "2.0"
+info:
+  description: "This is the User API definition."
+  version: "1.0.0"
+  title: "KDA - User API"
+  termsOfService: "https://raw.githubusercontent.com/TeamKDA/KorDevAus-User-API/master/LICENSE"
+  contact:
+    email: "ask@koreandevelopersaustralia.org"
+  license:
+    name: "MIT"
+    url: "https://raw.githubusercontent.com/TeamKDA/KorDevAus-User-API/master/LICENSE"
+externalDocs:
+  description: "Find out more about User API"
+  url: "https://github.com/TeamKDA/KorDevAus/wiki"
+schemes:
+- "https"
+host: "localhost:7071"
+basePath: "/api"
+tags:
+- name: "users"
+  description: "Access to the list of users"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/TeamKDA/KorDevAus/wiki"
+- name: "user"
+  description: "Access to the user"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/TeamKDA/KorDevAus/wiki"
+paths:
+  /adal/users:
+    get:
+      tags:
+      - "users"
+      summary: "Gets the list of users from Azure AD B2C"
+      description: "This returns the list of users from Azure AD B2C"
+      operationId: "GetAadUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AadUserCollectionResponse"
+        404:
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+  /adal/users/{userId}:
+    get:
+      tags:
+      - "user"
+      summary: "Gets the user from Azure AD B2C"
+      description: "This returns the user from Azure AD B2C"
+      operationId: "GetAadUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User ID"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/AadUserResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+  /mc/users:
+    get:
+      tags:
+      - "users"
+      summary: "Gets the list of users from MailChimp"
+      description: "This returns the list of users from MailChimp"
+      operationId: "GetMailChimpUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/MailChimpUserCollectionResponse"
+        404:
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+    put:
+      tags:
+      - "users"
+      summary: "Adds or updates the list of users to MailChimp"
+      description: "This upserts the list of users to MailChimp"
+      operationId: "SetMailChimpUsers"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Request object containing list of MailChimp users"
+        required: true
+        schema:
+          $ref: "#/definitions/MailChimpUserRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/MailChimpUserCollectionResponse"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+  /mc/users/{userId}:
+    get:
+      tags:
+      - "user"
+      summary: "Gets the user from MailChimp"
+      description: "This returns the user from MailChimp"
+      operationId: "GetMailChimpUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User ID"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/MailChimpUserResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+  /db/users:
+    get:
+      tags:
+      - "users"
+      summary: "Gets the list of users from Azure SQL"
+      description: "This returns the list of users from Azure SQL"
+      operationId: "GetDbUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/DbUserCollectionResponse"
+        404:
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+    put:
+      tags:
+      - "users"
+      summary: "Adds or updates the list of users to Azure SQL"
+      description: "This upserts the list of users to Azure SQL"
+      operationId: "SetDbUsers"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Request object containing list of DB users"
+        required: true
+        schema:
+          $ref: "#/definitions/DbUserRequest"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/DbUserCollectionResponse"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+  /db/users/{userId}:
+    get:
+      tags:
+      - "user"
+      summary: "Gets the user from Azure SQL"
+      description: "This returns the user from Azure SQL"
+      operationId: "GetDbUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "User ID"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/DbUserResponse"
+        404:
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      security:
+      - authkey: []
+securityDefinitions:
+  authkey:
+    type: "apiKey"
+    name: "x-functions-key"
+    in: "header"
+definitions:
+  AadUserCollectionResponse:
+    type: "object"
+    properties:
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/AadUser"
+  AadUserResponse:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/AadUser"
+  AadUser:
+    type: object
+    properties:
+      userId:
+        type: "string"
+      upn:
+        type: "string"
+      displayName:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      dateJoined:
+        type: "string"
+        format: "date-time"
+  MailChimpUserRequest:
+    type: "object"
+    properties:
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/MailChimpUser"
+  MailChimpUserCollectionResponse:
+    type: "object"
+    properties:
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/MailChimpUser"
+  MailChimpUserResponse:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/MailChimpUser"
+  MailChimpUser:
+    type: object
+    properties:
+      userId:
+        type: "string"
+      listId:
+        type: "string"
+      email:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      koreanName:
+        type: "string"
+      status:
+        type: "string"
+        enum:
+        - Subscribed
+      dateSynced:
+        type: "string"
+        format: "date-time"
+  DbUserRequest:
+    type: "object"
+    properties:
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/DbUser"
+  DbUserCollectionResponse:
+    type: "object"
+    properties:
+      users:
+        type: array
+        items:
+          $ref: "#/definitions/DbUser"
+  DbUserResponse:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/DbUser"
+  DbUser:
+    type: object
+    properties:
+      userId:
+        type: "string"
+      displayName:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      profileImageUrl:
+        type: "string"
+      azureAdId:
+        type: "string"
+      mailChimpId:
+        type: "string"
+      dateJoined:
+        type: "string"
+        format: "date-time"
+      groups:
+        type: "array"
+        items:
+          $ref: "#/definitions/DbGroup"
+  DbGroup:
+    type: object
+    properties:
+      groupId:
+        type: "string"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      dateJoined:
+        type: "string"
+        format: "date-time"
+  ErrorResponse:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      details:
+        type: "string"
