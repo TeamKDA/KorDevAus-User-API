@@ -39,7 +39,7 @@ namespace Kda.User.FunctionApp.Modules
 
             services.AddTransient<IGetDbUsersFunction, GetDbUsersFunction>();
             services.AddTransient<IGetDbUserFunction, GetDbUserFunction>();
-            services.AddTransient<IAddDbUsersFunction, AddDbUsersFunction>();
+            services.AddTransient<ISetDbUsersFunction, SetDbUsersFunction>();
         }
     }
 }

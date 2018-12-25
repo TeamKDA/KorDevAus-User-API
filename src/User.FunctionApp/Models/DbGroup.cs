@@ -10,7 +10,7 @@ namespace Kda.User.FunctionApp.Models
         /// <summary>
         /// Gets or sets the group Id.
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public virtual Guid GroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the group name.

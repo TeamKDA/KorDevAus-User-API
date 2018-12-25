@@ -21,7 +21,7 @@ namespace Kda.User.FunctionApp.Models
         /// <summary>
         /// Gets or sets the user ID.
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public virtual Guid UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the display name on AAD B2C.
@@ -51,7 +51,7 @@ namespace Kda.User.FunctionApp.Models
         /// <summary>
         /// Gets or sets the ID from Azure AD B2C.
         /// </summary>
-        public virtual Guid AadId { get; set; }
+        public virtual Guid AzureAdId { get; set; }
 
         /// <summary>
         /// Gets or sets the ID from MailChimp.

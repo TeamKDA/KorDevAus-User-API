@@ -21,7 +21,7 @@ namespace Kda.User.FunctionApp.Modules
 
             services.AddSingleton<IMailChimpManager, MailChimpManager>(p => new MailChimpManager(p.GetService<AppSettings>().MailChimp.ApiKey));
 
-            services.AddTransient<IAddMailChimpUsersFunction, AddMailChimpUsersFunction>();
+            services.AddTransient<ISetMailChimpUsersFunction, SetMailChimpUsersFunction>();
             services.AddTransient<IGetMailChimpUsersFunction, GetMailChimpUsersFunction>();
             services.AddTransient<IGetMailChimpUserFunction, GetMailChimpUserFunction>();
 

@@ -105,7 +105,7 @@ namespace Kda.User.FunctionApp
             IActionResult result;
             try
             {
-                result = await Factory.Create<IAddMailChimpUsersFunction, ILogger>(log)
+                result = await Factory.Create<ISetMailChimpUsersFunction, ILogger>(log)
                                       .InvokeAsync<HttpRequest, IActionResult>(req)
                                       .ConfigureAwait(false);
             }

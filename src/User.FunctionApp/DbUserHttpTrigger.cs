@@ -99,13 +99,13 @@ namespace Kda.User.FunctionApp
         /// <returns>Returns the <see cref="IActionResult"/> containing the list of users from database.</returns>
         [FunctionName(nameof(AddDbUsers))]
         public static async Task<IActionResult> AddDbUsers(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "db/users/bulk")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = "db/users")] HttpRequest req,
             ILogger log)
         {
             IActionResult result;
             try
             {
-                result = await Factory.Create<IAddDbUsersFunction, ILogger>(log)
+                result = await Factory.Create<ISetDbUsersFunction, ILogger>(log)
                                       .InvokeAsync<HttpRequest, IActionResult>(req)
                                       .ConfigureAwait(false);
             }

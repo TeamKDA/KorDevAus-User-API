@@ -21,19 +21,19 @@ namespace Kda.User.FunctionApp.Functions
     /// <summary>
     /// This represents the function entity to add users to MailChimp.
     /// </summary>
-    public class AddDbUsersFunction : FunctionBase<ILogger>, IAddDbUsersFunction
+    public class SetDbUsersFunction : FunctionBase<ILogger>, ISetDbUsersFunction
     {
         private readonly AppSettings _settings;
         private readonly IMapper _mapper;
         private readonly IDbUserService _service;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddDbUsersFunction"/> class.
+        /// Initializes a new instance of the <see cref="SetDbUsersFunction"/> class.
         /// </summary>
         /// <param name="settings"><see cref="AppSettings"/> instance.</param>
         /// <param name="mapper"><see cref="IMapper"/> instance.</param>
         /// <param name="service"><see cref="IDbUserService"/> instance.</param>
-        public AddDbUsersFunction(AppSettings settings, IMapper mapper, IDbUserService service)
+        public SetDbUsersFunction(AppSettings settings, IMapper mapper, IDbUserService service)
         {
             this._settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
